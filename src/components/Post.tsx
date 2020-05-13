@@ -6,7 +6,8 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 
 import { 
-  StyleSheet, Text, View, Image, StyleProp, ImageStyle, 
+  StyleSheet, Text, View, Image, StyleProp, ImageStyle,
+  TextStyle, ViewStyle
 } from 'react-native';
 
 export interface SubredditComponentProps {
@@ -23,17 +24,37 @@ interface PostProps {
 function Post({ post }: PostProps) {
 
 
+  console.log(post.flair[0] && post.flair[0].backgroundColor)
+
   const imgStyle: StyleProp<ImageStyle> = { 
-    marginTop: 16, 
-    alignSelf: 'flex-end', 
+    marginTop: 4, 
+    alignSelf: 'flex-start', 
     width: post.thumbnail?.width, 
     height: post.thumbnail?.height,
     borderWidth: 1,
-    borderStyle: 'solid',
     borderColor: 'rgb(35, 142, 55)',
     borderRadius: 4,
     marginBottom: 16,
   };
+
+  const flairContainerStyle: StyleProp<ViewStyle> = post.flair[0] ? {
+    backgroundColor: post.flair[0].backgroundColor || 'transparent',
+    borderRadius: 40,
+    paddingTop: 4,
+    paddingBottom: 4,
+    marginRight: 4,
+    paddingRight: 8,
+    paddingLeft: 8,
+    overflow: 'hidden',
+    alignSelf: 'flex-start'
+
+  } : null;
+
+  const flairStyle: StyleProp<TextStyle> = post.flair[0] ? {
+    fontSize: 12,
+    fontWeight: '700',
+    overflow: 'hidden'
+  } : null;
 
   return (
     <View style={styles.item}>
@@ -48,23 +69,17 @@ function Post({ post }: PostProps) {
         style={{ flex: 1, flexShrink: 1 }}
       >
         <Text style={styles.postedBy}>Posted by {post.author} {formatDistanceToNow(post.created)} ago</Text>
-        <Text style={styles.title}>
-          {post.flair.length !== 0 && (
+        
+        {post.flair.length !== 0 && (
+          <View
+            style={flairContainerStyle}
+          >
             <Text
-              style={{
-                // color: post.flair[0].textColor,
-                backgroundColor: post.flair[0].backgroundColor,
-                borderRadius: 16,
-                fontSize: 12,
-                paddingTop: 4,
-                paddingBottom: 4,
-                marginRight: 4,
-                paddingRight: 8,
-                paddingLeft: 8,
-                fontWeight: '700',
-              }}
+              style={flairStyle}
             >{post.flair[0].text}</Text>
-          )}  
+          </View>
+        )}  
+        <Text style={styles.title}>
           {post.title}
         </Text>
 
@@ -112,11 +127,10 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   score: {
-    fontsize: 12,
+    fontSize: 12,
     fontWeight: '700'
   },
   item: {
-    maxWidth: 800,
     flexDirection: "row",
     backgroundColor: 'white',
     padding: 0,
@@ -131,9 +145,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc'
   },
   title: {
-    flexDirection: 'column',
-    flex: 1, 
-    flexWrap: 'wrap',
     fontSize: 18,
     fontWeight: '500',
     marginBottom: 8

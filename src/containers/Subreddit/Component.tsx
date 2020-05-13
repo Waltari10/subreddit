@@ -38,6 +38,7 @@ const SubredditComponent: React.SFC<SubredditComponentProps> = ({
       {
         getSubredditRequestStatus === constants.SUCCESS && (
           <FlatList
+            style={styles.list}
             data={postsArr}
             renderItem={({ item }) => <Post post={item} />}
             keyExtractor={item => item.id}
@@ -57,6 +58,10 @@ const styles = StyleSheet.create({
     height: '100%',
     alignContent: 'center',
     alignItems: 'center'
+  },
+  list: {
+    width: '100%',
+    maxWidth: 800,
   }
 });
 
