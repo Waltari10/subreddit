@@ -39,34 +39,51 @@ const SubredditComponent: React.SFC<SubredditComponentProps> = ({
         )
       }
       {
-        postsArr.length !== 0 && <FlatList
-          refreshing={getSubredditRequestStatus === constants.LOADING}
-          style={styles.list}
-          data={postsArr}
-          renderItem={({ item }) => <Post post={item} />}
-          keyExtractor={item => item.id}
-          bounces={false}
-          onEndReachedThreshold={0.5}
-          onEndReached={() => {
-            // Doesn't work on expo browser...
-              if (getSubredditRequestStatus !== constants.LOADING) {
-                getSubreddit('ClimateActionPlan')
-              }
-          }}
-        >
-        </FlatList>
+        postsArr.length !== 0 && (
+          <FlatList
+            style={styles.list}
+            data={postsArr}
+            renderItem={({ item }) => <Post post={item} />}
+            keyExtractor={item => item.id}
+            bounces={false}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+              () => (
+                <View style={styles.listLoadingIndiContainer}>
+                  {
+                    getSubredditRequestStatus === constants.LOADING && (
+                      <ActivityIndicator style={styles.listLoadingIndi} size={70}/>
+                    )
+                  }
+                </View>
+              )
+            }
+            onEndReached={() => {
+              // Doesn't work on expo browser...
+                if (getSubredditRequestStatus !== constants.LOADING) {
+                  getSubreddit('ClimateActionPlan')
+                }
+            }}
+          >
+          </FlatList>
+        )
       }
     </View>
   );
 }
  
 const styles = StyleSheet.create({
+  listLoadingIndiContainer: {
+    height: 70,
+  },
+  listLoadingIndi: {
+  },
   loadingIndicator: {
     position: 'absolute',
     top: '40%',
   },
   container: {
-    // paddingTop: 8,
+    paddingTop: 8,
     backgroundColor: '#e8f9ea',
     width: '100%',
     height: '100%',

@@ -106,10 +106,10 @@ const styles = StyleSheet.create({
   },
   scoreContainer: {
     flexDirection: 'column',
-    paddingRight: 14,
+    paddingRight: 4,
     alignContent: 'center',
     alignItems: 'center',
-    width: 40
+    width: 50
   },
   postedBy: {
     color: 'rgb(120, 124, 126)',
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: 'white',
     padding: 0,
-    paddingLeft: 14,
+    paddingLeft: 4,
     paddingTop: 8,
     paddingRight: 8,
     marginVertical: 4,
