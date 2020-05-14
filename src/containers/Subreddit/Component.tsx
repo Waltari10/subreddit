@@ -46,7 +46,7 @@ const SubredditComponent: React.SFC<SubredditComponentProps> = ({
           renderItem={({ item }) => <Post post={item} />}
           keyExtractor={item => item.id}
           bounces={false}
-          onEndReachedThreshold={0.2}
+          onEndReachedThreshold={0.5}
           onEndReached={() => {
             // Doesn't work on expo browser...
               if (getSubredditRequestStatus !== constants.LOADING) {
