@@ -1,18 +1,12 @@
 import { createReducer, createAction } from "@reduxjs/toolkit";
-import { takeEvery, all, call, put } from "redux-saga/effects";
+import { takeEvery, call, put, select } from "redux-saga/effects";
 
 import * as constants from "../constants";
 
 export const createPayload = (payload: any): any => ({ payload });
 
-export const getSubredditError = createAction(
-  "GET_SUBREDDIT_ERROR",
-  createPayload
-);
-export const getSubredditSuccess = createAction(
-  "GET_SUBREDDIT_SUCCESS",
-  createPayload
-);
+export const getSubredditError = createAction("GET_SUBREDDIT_ERROR", createPayload);
+export const getSubredditSuccess = createAction("GET_SUBREDDIT_SUCCESS", createPayload);
 export const getSubreddit = createAction("GET_SUBREDDIT_START", createPayload);
 
 interface State {
@@ -31,16 +25,37 @@ const reducer = createReducer(initialState, {
   },
   [getSubredditSuccess.toString()]: (state: State, action: any) => {
     state.getSubredditRequestStatus = constants.SUCCESS;
-    state.subreddit = action.payload;
+
+    if (state.subreddit !== null) {
+
+
+      const existingChildren = state.subreddit.data.children;
+      
+      const newChildren = action.payload.data.children;
+
+      const combinedChildren = [...existingChildren, ...newChildren];
+
+      state.subreddit = {
+        ...state.subreddit,
+        ...action.payload,
+        data: {
+          ...action.payload.data,
+          children: combinedChildren
+        }
+      }
+
+    } else {
+      state.subreddit = action.payload;
+    }
   },
   [getSubreddit.toString()]: (state: State) => {
     state.getSubredditRequestStatus = constants.LOADING;
   },
 });
 
-const fetchSubreddit = async (subredditId: string): Promise<any> => {
+const fetchSubreddit = async (subredditId: string, after: string): Promise<any> => {
   const res = await fetch(
-    "https://gateway.reddit.com/desktopapi/v1/subreddits/" + subredditId + "?rtj=only&redditWebClient=web2x&app=web2x-client-production&allow_over18=&include=identity%2Cprefs%2CprefsAccount%2CstructuredStyles%2CprefsSubreddit&geo_filter=PT&layout=card",
+    "http://www.reddit.com/r/" + subredditId + "/hot/.json?after=" + after,
     {
       body: null,
       method: "GET",
@@ -52,27 +67,29 @@ const fetchSubreddit = async (subredditId: string): Promise<any> => {
   return jsonRes;
 };
 
-function* getSubredditStart({ payload } : { payload: string }) {
+function* handleGetSubredditStart({ payload } : { payload: string }) {
+
+
+  const after = yield select((state) => state.reddit?.subreddit?.data?.after || '');
+
   try {
-    const data = yield call(fetchSubreddit, payload);
+    const data = yield call(fetchSubreddit, payload, after);
     yield put(getSubredditSuccess(data));
   } catch (e) {
-    console.error(e);
+    // eslint-disable-next-line no-console
+    console.error(e.message);
     yield put(getSubredditError(e));
   }
 }
 
 function* watchGetSubreddit(): Generator<any, any, any> {
-  yield takeEvery(getSubreddit.toString(), getSubredditStart);
+  yield takeEvery(getSubreddit.toString(), handleGetSubredditStart);
 }
 
-function* saga(): Generator<any, any, any> {
-  yield all([watchGetSubreddit()]);
-}
 
 export default {
   reducer,
-  saga,
+  saga: watchGetSubreddit,
   api: {
     fetchSubreddit
   }

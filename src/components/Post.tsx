@@ -2,8 +2,6 @@ import * as React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import Icon from 'react-native-vector-icons/Octicons';
 
-// const myIcon = <Icon name="rocket" size={30} color="#900" />;
-
 
 import { 
   StyleSheet, Text, View, Image, StyleProp, ImageStyle,
@@ -14,31 +12,30 @@ export interface SubredditComponentProps {
   getSubreddit: Function;
   subreddit: Subreddit;
   getSubredditRequestStatus?: string;
-  postsArr: Array<Post>; // Array of posts
+  postsArr: Array<PostData>; // Array of posts
 }
 
 interface PostProps {
-  post: Post;
+  post: PostData;
 }
 
 function Post({ post }: PostProps) {
 
-
-  console.log(post.flair[0] && post.flair[0].backgroundColor)
+  const isFlair = !!post.link_flair_text;
 
   const imgStyle: StyleProp<ImageStyle> = { 
     marginTop: 4, 
     alignSelf: 'flex-start', 
-    width: post.thumbnail?.width, 
-    height: post.thumbnail?.height,
+    width: post.thumbnail_width, 
+    height: post.thumbnail_height,
     borderWidth: 1,
     borderColor: 'rgb(35, 142, 55)',
     borderRadius: 4,
     marginBottom: 16,
   };
 
-  const flairContainerStyle: StyleProp<ViewStyle> = post.flair[0] ? {
-    backgroundColor: post.flair[0].backgroundColor || 'transparent',
+  const flairContainerStyle: StyleProp<ViewStyle> = isFlair ? {
+    backgroundColor: post.link_flair_background_color || 'transparent',
     borderRadius: 40,
     paddingTop: 4,
     paddingBottom: 4,
@@ -50,7 +47,7 @@ function Post({ post }: PostProps) {
 
   } : null;
 
-  const flairStyle: StyleProp<TextStyle> = post.flair[0] ? {
+  const flairStyle: StyleProp<TextStyle> = isFlair ? {
     fontSize: 12,
     fontWeight: '700',
     overflow: 'hidden'
@@ -68,15 +65,15 @@ function Post({ post }: PostProps) {
       <View 
         style={{ flex: 1, flexShrink: 1 }}
       >
-        <Text style={styles.postedBy}>Posted by {post.author} {formatDistanceToNow(post.created)} ago</Text>
+        <Text style={styles.postedBy}>Posted by {post.author} {formatDistanceToNow(post.created * 1000)} ago</Text>
         
-        {post.flair.length !== 0 && (
+        {isFlair && (
           <View
             style={flairContainerStyle}
           >
             <Text
               style={flairStyle}
-            >{post.flair[0].text}</Text>
+            >{post.link_flair_text}</Text>
           </View>
         )}  
         <Text style={styles.title}>
@@ -85,16 +82,16 @@ function Post({ post }: PostProps) {
 
         <View style={styles.commentContainer}>
           <Icon style={styles.commentIcon} name="comment" size={16} color="#878a8c" />
-          <Text style={styles.comments}>{post.numComments} comments</Text>
+          <Text style={styles.comments}>{post.num_comments} comments</Text>
         </View>
       </View>
 
-      <Image
+      {post.thumbnail && <Image
         style={imgStyle}
         source={{
-          uri: post.thumbnail?.url,
+          uri: post.thumbnail,
         }}  
-      ></Image>
+      ></Image>}
     </View>
   );
 }

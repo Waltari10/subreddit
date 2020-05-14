@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, StatusBar } from 'react-native';
 import { Provider } from 'react-redux'
 
 // @ts-ignore
@@ -23,6 +23,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: StatusBar.currentHeight,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',

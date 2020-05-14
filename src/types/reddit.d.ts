@@ -1,35 +1,16 @@
 
-interface Post {
-    title: string;
-    id: string;
-    numComments: number;
-    created: number;
-    score: number;
-    isLocked: boolean;
-    author: string; // author name
-    authorId: string;
-    postId: string;
-    upvoteRatio: number;
-    viewCount: number;
-    goldCount: number;
-    id: string;
-    isSponsored: boolean;
-    permalink: string;
-    flair: Array<Flair>;
-    thumbnail: Thumbnail;
-}
-
-interface Thumbnail {
-    url: string;
-    width: number;
-    height: number;
-}
 
 interface Subreddit {
-    posts: Record<string, Post>;
-    postIds: Array<string>;
-    listingSort: string;
+    kind: string;
+    data: SubredditData;
+    after: string;
+    before: string;
+    dist: number;
     subRedditAboutInfo: Record<string, SubredditAboutInfo>;
+}
+
+interface SubredditData {
+    children: Array<PostDTO>;
 }
 
 
@@ -40,13 +21,27 @@ interface SubredditAboutInfo {
     created: number;
 }
 
-
-interface Flair {
-    text: string; 
-    type: string; // Text (what else?) 
-    textColor: string; // dark /what else
-    backgroundColor: string; // hex"#edeff1"
-    templateId: string; //"f70d1f56-bba7-11e9-adb0-0e7eae8dcdb0"
+interface PostDTO {
+    kind: string;
+    data: PostData;
 }
 
-  
+
+interface PostData {
+    id: string;
+    subreddit: string;
+    title: string;
+    subreddit_name_prefixed: string;
+    thumbnail_height: number;
+    upvote_ratio: number;
+    thumbnail_width: number;
+    score: number;
+    thumbnail: string;
+    created: number; 
+    num_comments: number;
+    author: string;
+    created_utc: number;
+    link_flair_text: string;
+    link_flair_type: string;
+    link_flair_background_color: string;
+}
