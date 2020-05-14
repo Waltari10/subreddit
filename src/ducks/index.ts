@@ -1,5 +1,4 @@
 import { all } from 'redux-saga/effects';
-import { Reducer } from 'redux';
 import { combineReducers } from 'redux';
 
 import reddit from './reddit';

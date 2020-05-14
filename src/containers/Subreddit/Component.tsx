@@ -1,10 +1,9 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { 
-  StyleSheet, Text, View, Button,
+  StyleSheet, View,
   ActivityIndicator,
   FlatList
 } from 'react-native';
-import Component from './Component';
 import Post from '../../components/Post';
 
 
@@ -20,7 +19,6 @@ export interface SubredditComponentProps {
 
 const SubredditComponent: React.SFC<SubredditComponentProps> = ({ 
   getSubreddit,
-  subreddit,
   getSubredditRequestStatus,
   postsArr,
 }) => {

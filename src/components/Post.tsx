@@ -38,7 +38,7 @@ function Post({ post }: PostProps) {
   };
 
   const flairContainerStyle: StyleProp<ViewStyle> = post.flair[0] ? {
-    backgroundColor: post.flair[0].backgroundColor || 'transparent',
+    backgroundColor: post.flair[0].backgroundColor || 'transparent',
     borderRadius: 40,
     paddingTop: 4,
     paddingBottom: 4,
@@ -48,13 +48,13 @@ function Post({ post }: PostProps) {
     overflow: 'hidden',
     alignSelf: 'flex-start'
 
-  } : null;
+  } : null;
 
   const flairStyle: StyleProp<TextStyle> = post.flair[0] ? {
     fontSize: 12,
     fontWeight: '700',
     overflow: 'hidden'
-  } : null;
+  } : null;
 
   return (
     <View style={styles.item}>

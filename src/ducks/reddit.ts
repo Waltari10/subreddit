@@ -16,7 +16,7 @@ export const getSubredditSuccess = createAction(
 export const getSubreddit = createAction("GET_SUBREDDIT_START", createPayload);
 
 interface State {
-  subreddit?: Subreddit | any;
+  subreddit?: Subreddit | any;
   getSubredditRequestStatus: string | null;
 }
 
@@ -33,7 +33,7 @@ const reducer = createReducer(initialState, {
     state.getSubredditRequestStatus = constants.SUCCESS;
     state.subreddit = action.payload;
   },
-  [getSubreddit.toString()]: (state: State, action: any) => {
+  [getSubreddit.toString()]: (state: State) => {
     state.getSubredditRequestStatus = constants.LOADING;
   },
 });

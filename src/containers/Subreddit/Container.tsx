@@ -1,5 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { selectPostsArray } from './selectors';
